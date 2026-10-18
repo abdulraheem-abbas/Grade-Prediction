@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>توقّع أداء الطالب</title>
+
+    <style>
+        :root {
+            --green: #176b58;
+            --ink: #193e35;
+            --muted: #71857b;
+            --border: #dce7df;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f1f6f3;
+            color: var(--ink);
+            font-family: Tahoma, Arial, sans-serif;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 28px 20px 50px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .tag {
+            background: #e0eee6;
+            color: var(--green);
+            border-radius: 20px;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        .intro {
+            margin: 35px 0 28px;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin: 0 0 12px;
+        }
+
+        .intro p {
+            color: var(--muted);
+            line-height: 1.9;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 12px 45px #183c3506;
+        }
+
+        fieldset {
+            border: 0;
+            padding: 0;
+            margin: 0 0 30px;
+            min-width: 0;
+        }
+
+        legend {
+            width: 100%;
+            font-size: 17px;
+            font-weight: bold;
+            padding-bottom: 14px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #edf2ee;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 9px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            min-height: 47px;
+            padding: 12px;
+            background: #fbfdfb;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--ink);
+        }
+
+        input[type="number"] {
+            direction: ltr;
+            text-align: right;
+        }
+
+        input:focus,
+        select:focus {
+            outline: 3px solid #d7eee1;
+            border-color: var(--green);
+        }
+
+        small {
+            display: block;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.8;
+            margin-top: 7px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            border-top: 1px solid #edf2ee;
+            padding-top: 24px;
+        }
+
+        button {
+            border: 0;
+            border-radius: 10px;
+            padding: 14px 22px;
+            cursor: pointer;
+        }
+
+        .primary {
+            flex: 1;
+            color: white;
+            background: var(--green);
+            font-weight: bold;
+        }
+
+        .secondary {
+            background: #edf3ef;
+            color: var(--ink);
+        }
+
+        button:disabled {
+            opacity: .6;
+            cursor: wait;
+        }
+
+        .notice {
+            margin-top: 22px;
+            padding: 16px;
+            background: #fff0ee;
+            color: #a23e35;
+            border-radius: 12px;
+            line-height: 1.9;
+            white-space: pre-line;
+        }
+
+        .result {
+            margin-top: 24px;
+            padding: 30px;
+            background: #eaf5ee;
+            border: 1px solid #cce4d4;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .result-title {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        #grade {
+            display: block;
+            margin: 15px 0;
+            font-size: 28px;
+            font-weight: bold;
+            line-height: 1.6;
+        }
+
+        #rawGrade {
+            color: #567368;
+            direction: ltr;
+            line-height: 1.8;
+        }
+
+        .footnote {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.9;
+            margin-top: 22px;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        @media (max-width: 750px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .tag {
+                font-size: 10px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        <header>
+            <div class="brand">▥ أداء الطالب</div>
+            <span class="tag">توقّعات مدعومة بنموذجك</span>
+        </header>
+
+        <section class="intro">
+            <h1>افهم مؤشرات الأداء الدراسي</h1>
+            <p>
+                أدخل بيانات الطالب للحصول على التقدير المتوقع من نموذج التعلّم الآلي.
+            </p>
+        </section>
+
+        <div class="card">
+            <form id="predictionForm">
+                <fieldset>
+                    <legend>01 — البيانات الأساسية</legend>
+
+                    <div class="grid">
+                        <div>
+                            <label for="Age">العمر</label>
+                            <input id="Age" name="Age" type="number" min="1" step="1" placeholder="مثل 16" required>
+                        </div>
+
+                        <div>
+                            <label for="Gender">الجنس</label>
+                            <select id="Gender" name="Gender" required>
+                                <option value="" selected disabled>اختر</option>
+                                <option value="0">ذكر</option>
+                                <option value="1">أنثى</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="Ethnicity">رمز الفئة العرقية</label>
+                            <input id="Ethnicity" name="Ethnicity" type="number" step="1" required>
+                            <small>استخدم الترميز نفسه الموجود في بيانات تدريب النموذج.</small>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>02 — الدراسة والحضور</legend>
+
+                    <div class="grid">
+                        <div>
+                            <label for="StudyTimeWeekly">ساعات الدراسة أسبوعيًا</label>
+                            <input id="StudyTimeWeekly" name="StudyTimeWeekly" type="number" min="0" max="168"
+                                step="any" placeholder="مثل 12.5" required>
+                        </div>
+
+                        <div>
+                            <label for="Absences">عدد مرات الغياب</label>
+                            <input id="Absences" name="Absences" type="number" min="0" step="1" placeholder="مثل 3"
+                                required>
+                        </div>
+
+                        <div>
+                            <label for="Tutoring">رمز الدروس الخصوصية</label>
+                            <input id="Tutoring" name="Tutoring" type="number" step="1" required>
+                            <small>أدخل القيمة وفق ترميز النموذج.</small>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>03 — البيئة الأسرية</legend>
+
+                    <div class="grid">
+                        <div>
+                            <label for="ParentalEducation">رمز تعليم الوالدين</label>
+                            <input id="ParentalEducation" name="ParentalEducation" type="number" step="1" required>
+                            <small>استخدم رمز المستوى الموجود في بيانات التدريب.</small>
+                        </div>
+
+                        <div>
+                            <label for="ParentalSupport">رمز دعم الوالدين</label>
+                            <input id="ParentalSupport" name="ParentalSupport" type="number" step="1" required>
+                            <small>استخدم رمز مستوى الدعم الموجود في بيانات التدريب.</small>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>04 — الأنشطة والمشاركة</legend>
+
+                    <div class="grid">
+                        <div>
+                            <label for="Extracurricular">رمز الأنشطة اللامنهجية</label>
+                            <input id="Extracurricular" name="Extracurricular" type="number" step="1" required>
+                        </div>
+
+                        <div>
+                            <label for="Sports">رمز الرياضة</label>
+                            <input id="Sports" name="Sports" type="number" step="1" required>
+                        </div>
+
+                        <div>
+                            <label for="Music">رمز الموسيقى</label>
+                            <input id="Music" name="Music" type="number" step="1" required>
+                        </div>
+
+                        <div>
+                            <label for="Volunteering">رمز التطوع</label>
+                            <input id="Volunteering" name="Volunteering" type="number" step="1" required>
+                        </div>
+                    </div>
+
+                    <small>
+                        أدخل رموز الأنشطة وفق بيانات التدريب؛ كود الـ API لا يوضح معانيها.
+                    </small>
+                </fieldset>
+
+                <div class="actions">
+                    <button id="submitButton" class="primary" type="submit">
+                        عرض التقدير المتوقع
+                    </button>
+                    <button class="secondary" type="reset">مسح البيانات</button>
+                </div>
+            </form>
+
+            <p id="error" class="notice" role="alert" hidden></p>
+
+            <section id="result" class="result" aria-live="polite" hidden>
+                <span class="result-title">التقدير المتوقع</span>
+                <output id="grade"></output>
+                <div id="rawGrade"></div>
+            </section>
+        </div>
+
+        <p class="footnote">
+            النتيجة توقّع من النموذج وليست درجة فعلية أو حكمًا على قدرات الطالب.
+        </p>
+    </main>
+
+    <script>
+        const API = window.location.protocol === "file:"
+            ? "http://127.0.0.1:8000"
+            : window.location.origin;
+
+        const form = document.getElementById("predictionForm");
+        const submitButton = document.getElementById("submitButton");
+        const result = document.getElementById("result");
+        const errorBox = document.getElementById("error");
+
+        const fields = [
+            "Age",
+            "StudyTimeWeekly",
+            "Absences",
+            "Gender",
+            "Ethnicity",
+            "ParentalEducation",
+            "Tutoring",
+            "ParentalSupport",
+            "Extracurricular",
+            "Sports",
+            "Music",
+            "Volunteering"
+        ];
+
+        const gradeLabels = {
+            "(90 -100) Excellent": "ممتاز — من 90 إلى 100",
+            "(80 - below 90%) Very Good": "جيد جدًا — من 80 إلى أقل من 90",
+            "(70 - below 80%) Good": "جيد — من 70 إلى أقل من 80",
+            "(60 - below 70%) Pass": "مقبول — من 60 إلى أقل من 70",
+            "(Below 60%) Fail": "راسب — أقل من 60",
+            "Unknown": "لم يتمكّن النموذج من تحديد التقدير"
+        };
+
+        let loading = false;
+
+        form.addEventListener("submit", async event => {
+            event.preventDefault();
+            if (loading) return;
+
+            result.hidden = true;
+            errorBox.hidden = true;
+
+            const params = new URLSearchParams();
+
+            for (const name of fields) {
+                const rawValue = form.elements.namedItem(name).value.trim();
+                const value = Number(rawValue);
+
+                if (
+                    rawValue === "" ||
+                    !Number.isFinite(value) ||
+                    (name !== "StudyTimeWeekly" && !Number.isSafeInteger(value))
+                ) {
+                    errorBox.textContent = "تحقق من إدخال قيم رقمية صحيحة في جميع الحقول.";
+                    errorBox.hidden = false;
+                    return;
+                }
+
+                params.set(name, String(value));
+            }
+
+            loading = true;
+            submitButton.disabled = true;
+            submitButton.textContent = "جارٍ تحليل البيانات…";
+            form.setAttribute("aria-busy", "true");
+
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 60000);
+
+            try {
+                const response = await fetch(
+                    `${API}/predict?${params.toString()}`,
+                    {
+                        method: "GET",
+                        credentials: "omit",
+                        signal: controller.signal
+                    }
+                );
+
+                const data = await response.json().catch(() => null);
+
+                if (!response.ok) {
+                    if (response.status === 422 && Array.isArray(data?.detail)) {
+                        const details = data.detail.map(item => {
+                            const field = item.loc?.slice(1).join(".") || "";
+                            return `${field}: ${item.msg}`;
+                        }).join("\n");
+
+                        throw new Error("رفض الخادم بعض القيم:\n" + details);
+                    }
+
+                    throw new Error(
+                        `حدث خطأ في الخادم (${response.status}). راجع نافذة تشغيل FastAPI.`
+                    );
+                }
+
+                const expectedGrade = data?.["expected grade"];
+
+                if (typeof expectedGrade !== "string") {
+                    throw new Error('الاستجابة لا تحتوي على الحقل "expected grade".');
+                }
+
+                document.getElementById("grade").textContent =
+                    gradeLabels[expectedGrade] || expectedGrade;
+
+                document.getElementById("rawGrade").textContent = expectedGrade;
+
+                result.hidden = false;
+                result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            } catch (error) {
+                if (error.name === "AbortError") {
+                    errorBox.textContent =
+                        "انتهت مهلة الانتظار. تحقق من تشغيل الخادم وتحميل النموذج.";
+                } else if (error instanceof TypeError) {
+                    errorBox.textContent =
+                        "تعذّر الاتصال بالخادم. تحقق من اتصالك بالإنترنت وحاول مرة أخرى.";
+                } else {
+                    errorBox.textContent = error.message;
+                }
+
+                errorBox.hidden = false;
+            } finally {
+                clearTimeout(timeout);
+                loading = false;
+                submitButton.disabled = false;
+                submitButton.textContent = "عرض التقدير المتوقع";
+                form.removeAttribute("aria-busy");
+            }
+        });
+
+        form.addEventListener("reset", event => {
+            if (loading) {
+                event.preventDefault();
+                return;
+            }
+
+            result.hidden = true;
+            errorBox.hidden = true;
+        });
+    </script>
+</body>
+
+</html>
